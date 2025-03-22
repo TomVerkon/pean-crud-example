@@ -15,6 +15,10 @@ export default (sequelize, DataTypes) => {
     password: {
       type: DataTypes.STRING,
     },
+    refreshToken: {
+      type: DataTypes.STRING,
+      require: false,
+    },
   });
 
   return User;

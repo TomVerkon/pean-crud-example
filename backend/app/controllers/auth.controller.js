@@ -52,9 +52,12 @@ export const signin = async (req, res) => {
       });
     }
 
+    const accessToken = generateAccessToken(user);
+    const refreshToken = generateRefreshToken(user);
+
     // Generate JWT
     const token = jwt.sign({ id: user.id }, authConfig.secret, {
-      expiresIn: 86400, // 24 hours
+      expiresIn: "3m",
     });
 
     // Get user roles
@@ -70,5 +73,32 @@ export const signin = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+};
+
+export const refreshToken = async (req, res) => {
+  const { refreshToken } = req.body;
+  if (!refreshToken)
+    return res.status(403).json({ message: "Refresh token required" });
+
+  try {
+    const decoded = jwt.verify(refreshToken, authConfig.refreshSecret);
+    const user = await User.findByPk(decoded.id);
+
+    if (!user || user.refreshToken !== refreshToken) {
+      return res.status(403).json({ message: "Invalid refresh token" });
+    }
+
+    // Generate new tokens
+    const newAccessToken = generateAccessToken(user);
+    const newRefreshToken = generateRefreshToken(user);
+
+    // Update refresh token in DB
+    user.refreshToken = newRefreshToken;
+    await user.save();
+
+    res.json({ accessToken: newAccessToken, refreshToken: newRefreshToken });
+  } catch (err) {
+    res.status(401).json({ message: "Invalid or expired refresh token" });
   }
 };

@@ -40,6 +40,7 @@ npm-debug.log
 yarn-error.log
 testem.log
 /typings
+chatgpt.txt
 
 # System Files
 .DS_Store

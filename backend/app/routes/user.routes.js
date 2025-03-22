@@ -16,8 +16,8 @@ router.get("/all", allAccess);
 // User Route
 router.get("/user", [authJwt.verifyToken], userBoard);
 
-// Moderator Route
-router.get("/mod", [authJwt.verifyToken, authJwt.isModerator], moderatorBoard);
+// // Moderator Route
+// router.get("/mod", [authJwt.verifyToken, authJwt.isModerator], moderatorBoard);
 
 // Admin Route
 router.get("/admin", [authJwt.verifyToken, authJwt.isAdmin], adminBoard);

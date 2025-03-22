@@ -35,7 +35,7 @@ const PORT = process.env.PORT || 8080;
 
 // server.js (add below the import statements)
 const initializeRoles = async () => {
-  const roles = ["user", "moderator", "admin"];
+  const roles = ["user", "admin"];
   for (const role of roles) {
     await db.role.findOrCreate({
       where: { name: role },
